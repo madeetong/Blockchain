@@ -16,13 +16,15 @@ class Blockchain:
                 'timestamp' : time,
                 'data' : data,
                 'nonce' : nonce,
-                'previousHash' : self.chainHash[len(self.chainHash)-1]
+                'previousHash' : self.chainHash[-1]
             }
-            blockHash = self.proofOfWork(nonce=nonce)
+            self.chain.append(block) 
             if self.proofOfWork(nonce=nonce) != False :
-                self.chain.append(block)
+                blockHash = self.proofOfWork(nonce=nonce)
                 self.chainHash.append(blockHash)
                 return block
+            else :
+                self.chain.pop(-1)
             
         else :                      # กรณีเป็น genesis block
             block = {
@@ -46,7 +48,7 @@ class Blockchain:
         return hashEndodeBlock
 
     def proofOfWork(self,nonce):
-        hashCalculate = hashlib.sha256((str((self.chainHash[len(self.chainHash)-1]))+str(nonce)).encode('utf-8')).hexdigest()
+        hashCalculate = hashlib.sha256((str((self.chainHash[-1]))+str(nonce)+str(self.chain[-1])).encode('utf-8')).hexdigest()
         if hashCalculate[:1] == '0':  # กำหนดเป้า automatic difficulty adjustment ที่ไม่ automatic
             return hashCalculate
         else:
@@ -56,7 +58,7 @@ blockchain = Blockchain()
 
 # จำลองเป็น miner สุ่ม nonce ใส่ data ปิด block 
 blockchain.createBlock(data='Nai A send 1 coin to Nai B',nonce=875686)      # รบกวนเปลี่ยนค่า nonce จนกว่าจะเข้าเป้าด้วยครับ ขอบคุณครับ
-
+blockchain.createBlock(data='Nai B send 0.64 coin to Nai A',nonce=45655)
 
 
 # แสดงผลข้อมูล 
