@@ -39,14 +39,6 @@ class Blockchain:
             self.chainHash.append(blockHash)
             return block
 
-    def previousBlock(self):
-        self.chain[-1]
-        return self.chain[-1]
-
-    def blockHash(self,block):
-        hashEndodeBlock = hashlib.sha256(str(block).encode('utf-8')).hexdigest()
-        return hashEndodeBlock
-
     def proofOfWork(self,nonce):
         hashCalculate = hashlib.sha256((str((self.chainHash[-1]))+str(nonce)+str(self.chain[-1])).encode('utf-8')).hexdigest()
         if hashCalculate[:1] == '0':  # กำหนดเป้า automatic difficulty adjustment ที่ไม่ automatic
